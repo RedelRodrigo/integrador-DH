@@ -1,42 +1,47 @@
+import { FeatureCard } from "./components";
+
+const FEATURES = [
+  {
+    title: "Transferí dinero",
+    description:
+      "Desde Digital Money House vas a poder transferir dinero a otras cuentas, asi como también recibir transferencias y nuclear tu capital en nuestra billetera virtual",
+  },
+  {
+    title: "Recibí dinero",
+    description:
+      "Desde Digital Money House vas a poder transferir dinero a otras cuentas, asi como también recibir transferencias y nuclear tu capital en nuestra billetera virtual",
+  },
+] as const;
+
 export default function Home() {
   return (
-    <div
+    <main
       className="h-screen w-full bg-cover bg-center flex flex-col"
       style={{
         backgroundImage: "url('/chica.svg')",
       }}
     >
-      <div className="flex flex-col gap-5 px-45 py-35">
-        <div className="font-sans text-5xl w-100">
+      <header className="flex flex-col gap-5 px-45 py-35">
+        <h1 className="font-sans text-5xl w-100">
           De ahora en adelante, hacés más con tu dinero
-        </div>
+        </h1>
 
-        <div className="font-sans font-normal text-4xl text-[#C1FD35]">
+        <p className="font-sans font-normal text-4xl text-primary">
           Tu nueva <b>billetera virtual</b>
-        </div>
-      </div>
-      <div className="absolute bottom-0 w-full h-60 bg-[#c1fd35] z-0 rounded-t-[50px]"></div>
+        </p>
+      </header>
 
-      <div className="flex flex-row gap-2 justify-center relative z-10">
-        <div className="font-sans w-120 bg-white p-10 rounded-4xl shadow-lg ">
-          <h1 className="text-[40px] text-black font-bold">Transferí dinero</h1>
-          <hr className="bg-[#C1FD35] h-1" />
-          <p className="text-black text-[20px]">
-            Desde Digital Money House vas a poder transferir dinero a otras
-            cuentas, asi como también recibir transferencias y nuclear tu
-            capital en nuestra billetera virtual
-          </p>
-        </div>
-        <div className="font-sans w-120 bg-white p-10 rounded-4xl shadow-lg ">
-          <h1 className="text-[40px] text-black font-bold">Recibí dinero</h1>
-          <hr className="bg-[#C1FD35] h-1" />
-          <p className="text-black text-[20px]">
-            Desde Digital Money House vas a poder transferir dinero a otras
-            cuentas, asi como también recibir transferencias y nuclear tu
-            capital en nuestra billetera virtual
-          </p>
-        </div>
-      </div>
-    </div>
+      <div className="absolute bottom-0 w-full h-60 bg-primary z-0 rounded-t-[50px]" />
+
+      <section className="flex flex-row gap-2 justify-center relative z-10">
+        {FEATURES.map((feature) => (
+          <FeatureCard
+            key={feature.title}
+            title={feature.title}
+            description={feature.description}
+          />
+        ))}
+      </section>
+    </main>
   );
 }
