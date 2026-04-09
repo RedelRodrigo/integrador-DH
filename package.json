@@ -1,12 +1,14 @@
 {
-  "name": "proyecto",
-  "version": "0.1.0",
+  "name": "digital-money-house",
+  "version": "1.0.0",
+  "description": "Tu nueva billetera virtual",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint . --fix",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "next": "16.2.2",
