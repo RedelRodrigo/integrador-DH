@@ -1,37 +1,63 @@
 import Image from "next/image";
+import Link from "next/link";
+import { Button } from "./Button";
 
-const ButtonTransparent = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <button className="bg-transparent border border-[#C1FD35] px-4 py-2 rounded text-[#C1FD35] hover:bg-[#C1FD35] hover:text-black transition-colors duration-300 cursor-pointer">
-      {children}
-    </button>
-  );
+export interface NavAction {
+  label: string;
+  href: string;
+  variant: "primary" | "outline" | "gray";
+}
+
+interface NavbarProps {
+  actions?: NavAction[];
+  variant?: "dark" | "primary";
+  logoSrc?: string;
+}
+
+const DEFAULT_ACTIONS: NavAction[] = [
+  { label: "Ingresar", href: "/login", variant: "outline" },
+  { label: "Crear cuenta", href: "/register", variant: "primary" },
+];
+
+const navbarStyles: Record<string, string> = {
+  dark: "bg-dark",
+  primary: "bg-primary",
 };
 
-const ButtonGeneral = ({ children }: { children: React.ReactNode }) => {
+export const Navbar = ({
+  actions = DEFAULT_ACTIONS,
+  variant = "dark",
+  logoSrc = "/logo01.svg",
+}: NavbarProps) => {
   return (
-    <button className="bg-[#C1FD35] text-black px-4 py-2 rounded hover:bg-green-600 transition-colors duration-300 cursor-pointer">
-      {children}
-    </button>
-  );
-};
-
-export const Navbar = () => {
-  return (
-    <div className="bg-[#201F22] flex items-center justify-between w-full h-16">
-      <div className="container mx-auto px-4 py-3">
-        <Image
-          src="/logo01.svg"
-          alt="Logo"
-          width={87}
-          height={33}
-          loading="eager"
-        />
+    <nav
+      className={`${navbarStyles[variant]} w-full h-16 md:h-20 flex items-center px-4 sm:px-6 lg:px-10 shrink-0`}
+    >
+      <div className="w-full flex items-center justify-between flex-wrap gap-3">
+        <Link href="/" className="inline-block w-fit">
+          <Image
+            src={logoSrc}
+            alt="Digital Money House logo"
+            width={87}
+            height={33}
+            loading="eager"
+          />
+        </Link>
+        {actions.length > 0 && (
+          <div className="flex items-center gap-2 sm:gap-4 mt-1 sm:mt-0">
+            {actions.map((action) => (
+              <Link key={action.href} href={action.href}>
+                <Button
+                  variant={action.variant}
+                  className="text-sm sm:text-base px-3 sm:px-4 py-2"
+                >
+                  {action.label}
+                </Button>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
-      <div className=" mx-auto px-4 py-3 flex space-x-4 ">
-        <ButtonTransparent>Ingresar</ButtonTransparent>
-        <ButtonGeneral>Crear cuenta</ButtonGeneral>
-      </div>
-    </div>
+    </nav>
   );
 };
