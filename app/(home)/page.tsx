@@ -1,6 +1,6 @@
 import { FeatureCard } from "../components";
 
-const FEATURES = [
+const FALLBACK_FEATURES = [
   {
     title: "Transferí dinero",
     description:
@@ -11,9 +11,9 @@ const FEATURES = [
     description:
       "Pagá mensualmente los servicios en 3 simples clicks. Facil, rápido y conveniente. Olvidate de las facturas en papel",
   },
-] as const;
+];
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className="h-full w-full flex flex-col justify-between">
       <header className="flex flex-col  gap-4 sm:gap-5 md:gap-6 px-6 sm:px-10 md:px-12 lg:px-16 pt-2 sm:pt-6 md:pt-8 lg:pt-10 max-w-[20rem] sm:max-w-[24rem] md:max-w-lg lg:max-w-152">
@@ -33,7 +33,7 @@ export default function Home() {
       </header>
 
       <section className="z-10 flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-6 lg:gap-8 justify-center items-center md:items-stretch px-6 sm:px-10 md:px-12 lg:px-16 py-8 sm:py-10 md:py-12 lg:py-16">
-        {FEATURES.map((feature) => (
+        {FALLBACK_FEATURES.map((feature) => (
           <FeatureCard
             key={feature.title}
             title={feature.title}
