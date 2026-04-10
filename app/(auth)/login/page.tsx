@@ -4,6 +4,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Input } from "../../components/Input";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import {
+  checkUserExists,
+  clearLoginError,
+  loginUser,
+} from "../../store/authSlice";
 
 type LoginFormInputs = {
   email?: string;
@@ -12,8 +18,8 @@ type LoginFormInputs = {
 
 export default function LoginPage() {
   const [step, setStep] = useState<"email" | "password">("email");
-  const [loading, setLoading] = useState(false);
-  const [apiError, setApiError] = useState(false);
+  const dispatch = useAppDispatch();
+  const { loading, error } = useAppSelector((state) => state.auth.login);
 
   const {
     register,
@@ -33,7 +39,7 @@ export default function LoginPage() {
       value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
       message: "Ingresá un email válido",
     },
-    onChange: () => setApiError(false),
+    onChange: () => dispatch(clearLoginError()),
   };
 
   const passwordRules = {
@@ -42,68 +48,33 @@ export default function LoginPage() {
       value: 6,
       message: "La contraseña debe tener al menos 6 caracteres",
     },
-    onChange: () => setApiError(false),
+    onChange: () => dispatch(clearLoginError()),
   };
 
   const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
-    setLoading(true);
-    setApiError(false);
-
     if (step === "email") {
       try {
-        const res = await fetch(
-          "https://digitalmoney.digitalhouse.com/api/login",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email: data.email,
-              password: "check_user", // Contraseña genérica para verificar existencia
-            }),
-          },
-        );
-
-        if (res.status === 404) {
-          setApiError(true); // Usuario no existe
-        } else {
-          // El usuario existe
-          setStep("password");
-        }
+        await dispatch(checkUserExists({ email: data.email ?? "" })).unwrap();
+        setStep("password");
       } catch {
-        setApiError(true);
-      } finally {
-        setLoading(false);
+        // Error ya manejado en el estado global
       }
     } else {
       // Step Password - Intentar el Login Real
       try {
-        const res = await fetch(
-          "https://digitalmoney.digitalhouse.com/api/login",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email: data.email,
-              password: data.password,
-            }),
-          },
-        );
+        const token = await dispatch(
+          loginUser({
+            email: data.email ?? "",
+            password: data.password ?? "",
+          }),
+        ).unwrap();
 
-        if (res.ok) {
-          const resData = await res.json();
-          console.log("Login exitoso. Token recibido", resData.token);
+        if (token) {
+          console.log("Login exitoso. Token recibido", token);
           // router.push("/dashboard"); o /home
-        } else {
-          setApiError(true); // Contraseña incorrecta
         }
       } catch {
-        setApiError(true);
-      } finally {
-        setLoading(false);
+        // Error ya manejado en el estado global
       }
     }
   };
@@ -119,7 +90,7 @@ export default function LoginPage() {
   const watchedPassword = watch("password");
   const validationMessage =
     step === "email" ? errors.email?.message : errors.password?.message;
-  const hasError = apiError || !!validationMessage;
+  const hasError = !!error || !!validationMessage;
 
   return (
     <div className="flex flex-col items-center justify-center w-full max-w-sm px-4">
@@ -186,12 +157,13 @@ export default function LoginPage() {
 
       <span
         className={`text-red-500 text-sm italic mt-4 text-center transition-opacity ${
-          apiError ? "opacity-100" : "opacity-0 invisible"
+          error ? "opacity-100" : "opacity-0 invisible"
         }`}
       >
-        {step === "email"
-          ? "Usuario inexistente. Vuelve a intentarlo."
-          : "Contraseña incorrecta. Vuelve a intentarlo."}
+        {error ||
+          (step === "email"
+            ? "Usuario inexistente. Vuelve a intentarlo."
+            : "Contraseña incorrecta. Vuelve a intentarlo.")}
       </span>
     </div>
   );

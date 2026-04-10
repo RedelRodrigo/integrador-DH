@@ -15,7 +15,7 @@ const FEATURES = [
 
 export default function Home() {
   return (
-    <main className="h-full w-full flex flex-col ">
+    <main className="h-full w-full flex flex-col justify-between">
       <header className="flex flex-col  gap-4 sm:gap-5 md:gap-6 px-6 sm:px-10 md:px-12 lg:px-16 pt-2 sm:pt-6 md:pt-8 lg:pt-10 max-w-[20rem] sm:max-w-[24rem] md:max-w-lg lg:max-w-152">
         <h1 className="font-sans text-3xl sm:text-4xl md:text-4xl lg:text-5xl">
           <span className="block lg:inline">De ahora</span>{" "}
@@ -32,17 +32,16 @@ export default function Home() {
         </p>
       </header>
 
-      <div className="mt-auto bg-primary rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] pt-6 sm:pt-8 md:pt-10 pb-8 sm:pb-10 md:pb-12 px-6 sm:px-10 md:px-12 lg:px-16">
-        <section className="flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-6 lg:gap-8 justify-center -mt-8 sm:-mt-12 md:-mt-16">
-          {FEATURES.map((feature) => (
-            <FeatureCard
-              key={feature.title}
-              title={feature.title}
-              description={feature.description}
-            />
-          ))}
-        </section>
-      </div>
+      <section className="z-10 flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-6 lg:gap-8 justify-center items-center md:items-stretch px-6 sm:px-10 md:px-12 lg:px-16 py-8 sm:py-10 md:py-12 lg:py-16">
+        {FEATURES.map((feature) => (
+          <FeatureCard
+            key={feature.title}
+            title={feature.title}
+            description={feature.description}
+          />
+        ))}
+      </section>
+      <div className="absolute bottom-16 h-56 w-full bg-primary rounded-t-[50px]"></div>
     </main>
   );
 }

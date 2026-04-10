@@ -1,9 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Input } from "../../components/Input";
 import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import {
+  clearRegisterStatus,
+  registerUser,
+  setRegisterError,
+} from "../../store/authSlice";
 
 type RegisterInputs = {
   nombre?: string;
@@ -17,10 +22,10 @@ type RegisterInputs = {
 
 export default function RegisterPage() {
   const router = useRouter();
-
-  const [errorMessage, setErrorMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const dispatch = useAppDispatch();
+  const { loading, error, success } = useAppSelector(
+    (state) => state.auth.register,
+  );
 
   const {
     register,
@@ -35,46 +40,28 @@ export default function RegisterPage() {
   const watchedPassword = watch("password");
 
   const onSubmit: SubmitHandler<RegisterInputs> = async (data) => {
-    setErrorMessage("");
-    setLoading(true);
-
     try {
-      const res = await fetch(
-        "https://digitalmoney.digitalhouse.com/api/users",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            dni: Number(data.dni),
-            email: data.email,
-            firstname: data.nombre,
-            lastname: data.apellido,
-            password: data.password,
-            phone: data.telefono,
-          }),
-        },
-      );
-
-      if (res.ok) {
-        setIsSuccess(true);
-      } else {
-        const errorData = await res.json();
-        setErrorMessage(errorData.error || "Ocurrió un error al registrarse");
-      }
+      dispatch(clearRegisterStatus());
+      await dispatch(
+        registerUser({
+          dni: Number(data.dni),
+          email: data.email ?? "",
+          firstname: data.nombre ?? "",
+          lastname: data.apellido ?? "",
+          password: data.password ?? "",
+          phone: data.telefono ?? "",
+        }),
+      ).unwrap();
     } catch {
-      setErrorMessage("Error de conexión con el servidor");
-    } finally {
-      setLoading(false);
+      // Error ya manejado en el estado global
     }
   };
 
   const onError = () => {
-    setErrorMessage("Revisá los campos marcados");
+    dispatch(setRegisterError("Revisá los campos marcados"));
   };
 
-  if (isSuccess) {
+  if (success) {
     return (
       <div className="flex flex-col items-center justify-center w-full h-full flex-grow mt-24">
         <div className="w-24 h-24 rounded-full border-[6px] border-[#C1FD35] flex items-center justify-center mb-16">
@@ -268,10 +255,10 @@ export default function RegisterPage() {
             </button>
             <span
               className={`text-red-500 text-sm italic mt-2 text-center transition-opacity ${
-                errorMessage ? "opacity-100" : "opacity-0 invisible"
+                error ? "opacity-100" : "opacity-0 invisible"
               }`}
             >
-              {errorMessage || "Error temporal"}
+              {error || "Error temporal"}
             </span>
           </div>
         </div>
