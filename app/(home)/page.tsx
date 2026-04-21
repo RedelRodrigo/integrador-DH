@@ -15,7 +15,7 @@ const FALLBACK_FEATURES = [
 
 export default async function Home() {
   return (
-    <main className="h-full w-full flex flex-col justify-between">
+    <main className="w-full flex flex-col justify-between py-4 sm:py-6 md:py-8 lg:py-10 h-full">
       <header className="flex flex-col  gap-4 sm:gap-5 md:gap-6 px-6 sm:px-10 md:px-12 lg:px-16 pt-2 sm:pt-6 md:pt-8 lg:pt-10 max-w-[20rem] sm:max-w-[24rem] md:max-w-lg lg:max-w-152">
         <h1 className="font-sans text-3xl sm:text-4xl md:text-4xl lg:text-5xl">
           <span className="block lg:inline">De ahora</span>{" "}

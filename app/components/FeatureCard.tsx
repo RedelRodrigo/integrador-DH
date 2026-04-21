@@ -5,7 +5,7 @@ interface FeatureCardProps {
 
 export const FeatureCard = ({ title, description }: FeatureCardProps) => {
   return (
-    <article className="font-sans w-full md:flex-1 h-full max-w-140 bg-white p-6 sm:p-8 md:p-10 rounded-3xl sm:rounded-4xl shadow-lg flex flex-col">
+    <article className="font-sans w-full md:flex-1 max-w-140 bg-white p-5 sm:p-8 md:p-10 rounded-3xl sm:rounded-4xl shadow-lg flex flex-col">
       <h2 className="text-2xl sm:text-3xl lg:text-[40px] text-black font-bold">
         {title}
       </h2>

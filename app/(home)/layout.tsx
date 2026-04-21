@@ -14,7 +14,7 @@ export default function HomeLayout({
       }}
     >
       <Navbar />
-      <div className="flex-1 min-h-0 flex">{children}</div>
+      <div className="flex-1 overflow-y-auto flex">{children}</div>
       <Footer />
     </div>
   );
