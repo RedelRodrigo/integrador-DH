@@ -70,8 +70,7 @@ export default function LoginPage() {
         ).unwrap();
 
         if (token) {
-          console.log("Login exitoso. Token recibido", token);
-          // router.push("/dashboard"); o /home
+          // Login exitoso
         }
       } catch {
         // Error ya manejado en el estado global

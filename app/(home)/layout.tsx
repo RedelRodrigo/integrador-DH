@@ -1,15 +1,21 @@
 import { Navbar, Footer } from "../components";
+import { getBackgroundImage } from "@/lib/services";
 
-export default function HomeLayout({
+// Desactivar cache para que siempre intente conectar a la BD
+export const revalidate = 0;
+
+export default async function HomeLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const bgImage = await getBackgroundImage();
+
   return (
     <div
       className="h-screen flex flex-col overflow-hidden bg-cover bg-no-repeat"
       style={{
-        backgroundImage: "url('/chica.svg')",
+        backgroundImage: `url('${bgImage}')`,
         backgroundPosition: "center top",
       }}
     >
